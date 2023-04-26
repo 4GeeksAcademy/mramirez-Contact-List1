@@ -9,6 +9,8 @@ export const AddContact = () => {
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
   
+
+    //FUNCIN GET
     const getAllContacts = () => {
       fetch('https://assets.breatheco.de/apis/fake/contact/agenda/mramirez-agenda')
         .then((response) => response.json())
@@ -19,6 +21,8 @@ export const AddContact = () => {
         .catch((error) => console.log(error));
     };
   
+
+    //FUNCION POST
     const handleAddContacts = () => {
       const data = {
         "full_name": fullName,

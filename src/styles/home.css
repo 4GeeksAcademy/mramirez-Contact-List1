@@ -1,16 +1,23 @@
+img {
+    width: 150px;
+    height: 150px;
+    border-radius: 100%;
+}
+
 .container-contact {
+    margin: 20px;
+    padding-top: 50px;
+}
+
+.row {
+    margin-bottom: 50px;
+    border: 2px solid black;
+    width: 100%;
+    height: auto;
+    background-color: rgb(233, 233, 233);
+}
+
+.btn {
     margin: 10px;
-}
-
-.contact-card {
-    margin-top: 10px;
-    padding: 10px;
-    border: 2px solid rgb(110, 110, 110);
-    display: flex;
-}
-
-.contact-image {
-    width: 200px;
-    height: 100px;
 }
 
