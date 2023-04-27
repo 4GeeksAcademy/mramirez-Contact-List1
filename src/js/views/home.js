@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/home.css";
+import { Link } from "react-router-dom"
 
 import { BsPinMap } from "react-icons/bs";
 import { AiOutlinePhone } from "react-icons/ai";
@@ -36,7 +37,7 @@ export const Home = () => {
   return (
     <div className="container-contact">
       {contacts.length === 0 ? (
-        <h2>No hay contactos disponibles</h2>
+        <h2>No hay contactos disponibles  !</h2>
       ) : (
         contacts.map(contact => (
           <div className="row" key={contact.id}>
@@ -53,11 +54,13 @@ export const Home = () => {
                   <p className="body-email"><FiMail /> {contact.email}</p>
               </div>
               <div className="grid g-col-6">
+                <Link to={`/edit/${contact.id}`}>
                   <button 
                       type="button" 
                       class="btn btn-secondary">
                          Edit <BiPencil />
                   </button>
+                  </Link>
                   <button 
                       onClick={() => deleteContact(contact.id)}
                       type="button" 

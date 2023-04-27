@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "../../styles/addContact.css";
 import { useState } from "react"
+import { useParams } from "react-router";
 
 export const AddContact = () => {
     const [contactInfo, setContactInfo] = useState([]);
@@ -8,9 +9,27 @@ export const AddContact = () => {
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
+    const [isEditing, setIsEditing] = useState(false);
+    const { idContact } = useParams();
   
+    useEffect(() => {
+        if (idContact) {
+            fetch(`https://assets.breatheco.de/apis/fake/contact/${idContact}`)
+            .then((response) => {
+                if(!response.ok) {
+                    throw new Error("Error al obtener contacto");
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setFullName(data.full_name);
+                setIsEditing(true);
+            })
+            .catch((error) => console.error(error));
+        }
+    }, [idContact])
 
-    //FUNCIN GET
+    //FUNCION GET
     const getAllContacts = () => {
       fetch('https://assets.breatheco.de/apis/fake/contact/agenda/mramirez-agenda')
         .then((response) => response.json())
@@ -23,29 +42,39 @@ export const AddContact = () => {
   
 
     //FUNCION POST
-    const handleAddContacts = () => {
-      const data = {
-        "full_name": fullName,
-        "email": email,
-        "agenda_slug": "mramirez-agenda",
-        "address": address,
-        "phone": phone
-    };
-      fetch('https://assets.breatheco.de/apis/fake/contact/', {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-        .then((resp) => resp.json())
-        .then((data) => {
-          console.log(data);
-          getAllContacts();
-        });
-    };
+    const handleAddContacts = (e) => {
+        e.preventDefault();
+        const method = isEditing ? "PUT" : "POST";
+        const url = isEditing
+          ? `https://assets.breatheco.de/apis/fake/contact/${idContact}`
+          : "https://assets.breatheco.de/apis/fake/contact/";
+      
+        const data = {
+          full_name: fullName,
+          email: email,
+          phone: phone,
+          address: address,
+          agenda_slug: "mramirez-agenda",
+        };
+      
+        fetch(url, {
+          method: method,
+          body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((resp) => resp.json())
+          .then((data) => {
+            console.log(data);
+            getAllContacts();
+            alert("Contact added successfully!");
+          });
+      };
+      
   
   return (
+    <form onSubmit={handleAddContacts}>
     <div className="container-fluid p-5">
       <div className="input-group mb-3">
       <label className="form-label">
@@ -116,9 +145,13 @@ export const AddContact = () => {
       </div>
 
       <div className="input-group-button">  
-        <button type="submit" class="button" onClick={handleAddContacts}>
-          <span class="button__text">Add Item</span>
-          <span class="button__icon">
+        <button 
+            type="submit" 
+            className="button" 
+            value={isEditing ? "Editar Contacto" : "Añadir Contacto"}>
+                 
+          <span className="button__text">Add Item</span>
+          <span className="button__icon">
             <svg 
             xmlns="http://www.w3.org/2000/svg" 
             width="24" 
@@ -147,6 +180,7 @@ export const AddContact = () => {
         </button>
       </div>
     </div>
+    </form>
   );
 };
 
